@@ -1,50 +1,36 @@
-# ByteBites Design Reference
+# ByteBites Reference File
 
-Ground rules for any AI assistant working on this project. Attach this file to every chat.
+## About This Project
+You are building the backend logic for a campus food ordering app called ByteBites
+using Python classes and simple algorithms.
 
-## Project Context
-
-ByteBites is a campus food ordering backend. This tinker activity builds only the
-**core domain model**: Python classes plus simple algorithms (filter, sort, total).
-There is no UI, database, network, or AI recommendation engine in scope.
+## Project Scope
+Do not add authentication logic, a database layer, or any features not described 
+in the spec.
 
 ## Behavioral Instructions
+**Stay within four classes.** Model only `Customer`, `FoodItem`, `Menu`, and `Order`.
+Do not add other classes (no `Payment`, `Restaurant`, `Cart`, `Recommender`, `Category`,
+`PurchaseHistory`, etc.). Category is a plain string; purchase history is a plain list of `Order`s.
 
-**Scope**
-- Model exactly four classes: `Customer`, `FoodItem`, `Menu`, `Order`. Do not add others
-  (no `Payment`, `Restaurant`, `Recommender`, `Cart`, `Address`, etc.).
-- Only include attributes and methods that the client feature request implies.
-  If something is not in `bytebites_spec.md`, leave it out and mention it as an optional idea instead.
-- Do not invent features: no discounts, taxes, delivery, inventory, authentication, or persistence.
+**Only what the spec describes.** Every attribute and method must trace to a sentence in
+`bytebites_spec.md`, or to a task the activity explicitly asks for (filtering, sorting, totals,
+light validation). If something is not covered, leave it out and mention it as an optional idea
+instead of adding it. No ids, emails, timestamps, status fields, discounts, taxes, delivery,
+inventory, checkout, search, or persistence.
 
-**Design style**
-- Prefer the simplest thing that works: plain Python classes, lists, and built-in
-  `sorted()` / list comprehensions. No inheritance hierarchies, abstract base classes,
-  design patterns, metaclasses, or third-party libraries.
-- Standard library only. Type hints are welcome; `dataclasses` are fine for plain data holders.
-- Keep each method short and single-purpose, with a one-line docstring.
+**"Verify real users" is not authentication.** It means a simple check of the customer's
+purchase history. Do not add passwords, tokens, login, or sessions.
 
-**Attributes (from the spec)**
-- `Customer`: `name`, `purchase_history` (past orders).
-- `FoodItem`: `name`, `price`, `category`, `popularity_rating`.
-- `Menu`: a collection of `FoodItem` objects, filterable by category.
-- `Order`: the selected `FoodItem`s for one transaction, with a computed total.
+**Keep it simple.** Plain Python classes, lists, list comprehensions, and built-in `sorted()`.
+Standard library only. No inheritance, abstract classes, design patterns, or third-party
+libraries. Short methods with a one-line docstring each.
 
-**Behavior**
-- Category matching is case-insensitive (`"drinks"` matches `"Drinks"`).
-- An empty `Order` has a total of `0`, not an error.
-- Sorting returns a new list and never mutates the stored collection.
-- Validate obvious bad data (negative price, blank name) with a clear `ValueError`.
-- A customer is "verified" when they have a non-empty name and a purchase history
-  (the spec says history is used "to verify they are real users"), kept as a tiny helper.
+**Predictable behavior.** Category matching ignores case. An empty `Order` totals `0`, not an
+error. Sorting returns a new list and never reorders the stored menu. Bad data (blank name,
+negative price) raises `ValueError`.
 
-**Output format**
-- UML diagrams are Mermaid `classDiagram` blocks inside Markdown.
-- Show relationships with cardinality (e.g. `Menu "1" o-- "*" FoodItem`).
-- Explain each class in one sentence beneath the diagram.
-- When asked to review code, review one class at a time and list only changes that
-  keep the code aligned with the spec.
-
-**Process**
-- Treat AI output as a draft. Flag anything you added that is not in the spec.
-- Prefer small, reviewable changes over large rewrites.
+**How to respond.** Treat AI output as a draft. Flag anything you added that is not in the spec.
+Draw UML as a Mermaid `classDiagram` with cardinality, followed by one sentence per class.
+When reviewing code, go one class at a time and propose only changes that keep it aligned with
+the spec. Prefer small, reviewable changes over rewrites.

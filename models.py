@@ -10,10 +10,8 @@ class FoodItem:
     """One sellable item, e.g. a 'Spicy Burger' or 'Large Soda'."""
 
     def __init__(self, name, price, category, popularity_rating):
-        if not isinstance(name, str) or not name.strip():
-            raise ValueError("FoodItem name must be a non-empty string")
-        if not isinstance(category, str) or not category.strip():
-            raise ValueError("FoodItem category must be a non-empty string")
+        if not name.strip() or not category.strip():
+            raise ValueError("FoodItem name and category cannot be blank")
         if price < 0:
             raise ValueError("FoodItem price cannot be negative")
         self.name = name
@@ -34,8 +32,6 @@ class Menu:
 
     def add_item(self, item):
         """Add a FoodItem to the menu."""
-        if not isinstance(item, FoodItem):
-            raise TypeError("Menu can only hold FoodItem objects")
         self.items.append(item)
 
     def filter_by_category(self, category):
@@ -47,10 +43,6 @@ class Menu:
         """Return a new list of items, most popular first (ties keep menu order)."""
         return sorted(self.items, key=lambda item: item.popularity_rating, reverse=True)
 
-    def sort_by_price(self):
-        """Return a new list of items, cheapest first (ties keep menu order)."""
-        return sorted(self.items, key=lambda item: item.price)
-
 
 class Order:
     """A single transaction: the items a user selected."""
@@ -60,8 +52,6 @@ class Order:
 
     def add_item(self, item):
         """Add a selected FoodItem to the order."""
-        if not isinstance(item, FoodItem):
-            raise TypeError("Order can only hold FoodItem objects")
         self.items.append(item)
 
     def calculate_total(self):
@@ -73,16 +63,10 @@ class Customer:
     """A user of the app, with a record of past purchases."""
 
     def __init__(self, name):
-        if not isinstance(name, str) or not name.strip():
-            raise ValueError("Customer name must be a non-empty string")
+        if not name.strip():
+            raise ValueError("Customer name cannot be blank")
         self.name = name
         self.purchase_history = []
-
-    def add_purchase(self, order):
-        """Record a completed Order in the purchase history."""
-        if not isinstance(order, Order):
-            raise TypeError("purchase_history can only hold Order objects")
-        self.purchase_history.append(order)
 
     def is_verified(self):
         """A customer counts as a real user if they have at least one past purchase."""
@@ -102,7 +86,6 @@ if __name__ == "__main__":
 
     print("Drinks:", [i.name for i in menu.filter_by_category("drinks")])
     print("By popularity:", [i.name for i in menu.sort_by_popularity()])
-    print("By price:", [i.name for i in menu.sort_by_price()])
 
     order = Order()
     order.add_item(menu.items[0])
@@ -111,5 +94,5 @@ if __name__ == "__main__":
 
     ada = Customer("Ada")
     print("Verified before purchase:", ada.is_verified())
-    ada.add_purchase(order)
+    ada.purchase_history.append(order)
     print("Verified after purchase:", ada.is_verified())
